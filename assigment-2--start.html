@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>MDIA 2294</title>
+	
+	<style>	    
+	    img {
+	        margin:5px;
+	    }
+	    
+	    img.clickable{
+	        cursor:pointer;
+	    }
+		
+	</style>
+	
+</head>
+<body>
+
+	<h1>MDIA 2294: Assignment 2</h1>
+	
+	<div style="text-align:center;">
+	    <table>
+	        <tr>
+	            <td></td>
+	            <td style="text-align:center;">
+                    <div><img id="main-image" alt="Main Image" /></div> 
+                </td>
+	            <td></td>
+	        
+	        </tr>
+	        <tr>
+	            <td>
+	                <img src="images/first.png" id="first-btn" />            
+	                <img src="images/prev.png" id="prev-btn" />
+	            </td>
+	            <td>
+	                <div id="thumbnail-area"></div>	        
+	            </td>
+	            <td>
+	                <img src="images/next.png" id="next-btn" />            
+	                <img src="images/last.png" id="last-btn" />
+	            </td>
+	        </tr>	    
+	    </table>       
+	</div>
+    
+	<script>
+		//image_root_names, is the Tag for the images later on.
+		//The Naming convention is to specify which images to choose from. It's important to note that the image Tags are missing thumb and full. 
+		// we will later use Full.png and Thumb.png to specify which of the two we are choosing. 
+		// we deliberatly choose these naming conventions for later use.
+		// This sets an array of 5 images.
+		// starts are 0 then goes 1, 2, 3, 4.
+		const image_root_names = ['sledge', 'thermite', 'twitch', 'fuze', 'iq'];
+		//this is setting a global funtion that will be called later on.
+		//This will effect all the code under image_root_names
+		//whenever called it will effect code.
+		let current_index;
+
+		// this is running a funtion based on the first load of a website.
+		const first_load = () => { 
+			set_thumbnails();
+
+			// this the function that will run based on the first load of the site.
+			// call set main image to run on first load.
+			set_main_image(0)	
+
+		}
+		// the index refers tto the root names we listed above.
+		// The array is set to hold 5 elements.
+		// the index is an interger which holds the vset value laid out byy the array.
+		// it starts at 0.
+		const set_main_image = (index) => {
+
+			console.log('hi');
+			//this line is making both current_index and index mean the same. Which ever is used will run the same function.
+			current_index = index;   
+	
+			// update the thumbnails based on the current selection
+			// document.querySelector('#main-image') is a function that looks through the html code for the ID given.
+			//.src = "images/", This line goes through the code and finds the image to place within the #main-iimage, Tag.
+			//image_root_names, This line refers back to the above Tag. This tells the code to look through the images Specified under the root names. 
+
+			document.querySelector("#main-image").src = "images/" + image_root_names [index] + "Full.png";
+			// This line is updating the thumbnail when the current index is chosen.
+			//update_thumbnails is calling uppon the function written later on.
+			update_thumbnails(index);
+		}
+	
+		const set_thumbnails = () => {
+
+			//.forEach is setting the loop of fuunctions to apply to the arrays in image_root_names
+			//image_name is giving each array aa seperate variable.
+			image_root_names.forEach((image_name, index) => {
+				//new_thumb is running a new function
+				//document.createElement('img') everythng ran wthin the loop will follow the coresponding css
+				const new_thumb = document.createElement('img');
+				// this line is grabbing the the specified images.
+				//Thumb.png is specifying only thumbnail images
+				new_thumb.src = "images/" + image_name + 'Thumb.png';
+				//clickable is setting more css for the function to follow
+				new_thumb.className = "clickable";
+				//this is setting the event. to click
+				new_thumb.addEventListener('click', () => {
+					//this is setting the image based on the index. sarting as 0 (sledge) and going through the array
+					set_main_image(index);
+
+
+				});
+				// this is applying the function in the html that is specified.
+				document.querySelector("#thumbnail-area").append(new_thumb);
+				//console.log(image_name)
+			});
+
+			update_thumbnails(current_index);
+			//document.querySelector('#thumbnail-area').src = "images/" + image_root_names [index] + "Thumb.png";
+		} 
+		//This is running the function update_thumbnails based on the current_image_index. aka the image thaat is chosen.
+		const update_thumbnails = (current_image_index) => {
+			// this is telling the thumbnails to follow the css under the tag clickable
+			const thumbnails = document.querySelectorAll(".clickable");
+
+			//console.log(thumbnails)
+			//this is running a loop that will apply what we run through thumb_el and loop_index
+			thumbnails.forEach((thumb_el, loop_index) => {
+
+				// const current_img = document.createElement('img');
+				// this is the loop we will be running when this function is called upon
+				//thumb_el.style.opacity is a function that will effect the opacity.
+				//current_image_index is the image we have active
+				// loop_index are the images that are not active.
+				// ? splits the function from the instructions. Later applying said instructuion in the same position as the function.
+				//1 : 0.5 is the instuctions that will aplly to the tags peovided. in this case its the opacity values.
+				thumb_el.style.opacity = (current_image_index == loop_index) ? "1" : "0.5";
+				
+
+				// current_img.addEventListener('click', () => {
+				// 	set_main_image(index);
+
+				// })
+				//document.querySelector("#thumbnail-area").append(current_img);
+			}
+
+			)
+		} 
+		// this is the function to jump to the first img
+		const set_nav_first = () => {
+			// selecting the first image based on the function.
+			set_main_image(0)
+
+		}
+		//this is setting the function to the button in the html
+		//click, set nav first. is telling the code to run the function name set nav first. when the user clicks the button listed in the html as first-btn.
+		document.querySelector('#first-btn').addEventListener('click', set_nav_first);
+		const set_nav_last = () => {
+
+			set_main_image(4)
+
+		}
+		document.querySelector('#last-btn').addEventListener('click', set_nav_last);
+
+		
+		const set_nav_next = () => {
+			//this is calling upon the global function and adding 1 to the index set main image
+			current_index += 1;
+			//this is telling if the current index is less than 5 go back to 0 aka the first image.
+			if(current_index >= 5){
+				current_index = 0;
+			}
+			// document.getElementById('main-image').src = "images/" + image_root_names[current_index] + "Full.png";
+			//This is calling upon set_main_image to display the current_index whenever this function is ran.
+			set_main_image(current_index);
+		}
+
+	document.querySelector('#next-btn').addEventListener('click', set_nav_next);
+	
+		const set_nav_prev = () => {
+			// this is subtracting the array number.
+			current_index -= 1;
+			//this is telling the code if its less than zero go back to 4 and loop the images.
+			if(current_index < 0 ){
+				current_index = 4;
+			}
+			
+			set_main_image(current_index);
+		}	
+
+		document.querySelector('#prev-btn').addEventListener('click', set_nav_prev);
+		//this is running the function set_main_image, and set_thumbnails based on the first load of the website.
+		window.addEventListener("load", () => {
+
+			set_main_image(0);
+
+			set_thumbnails();
+
+		} );
+
+	</script>
+	
+</body>
+</html>
